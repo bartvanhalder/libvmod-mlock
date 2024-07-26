@@ -15,7 +15,7 @@ Useful when combining an instance of varnish on the same machine as the
 backend. Varnish should always be fast while a backend process can be
 swapped out.
 
-$Function int all()
+$Function INT all()
 
 This calls MLOCK(2): mlockall(MCL_CURRENT|MCL_FUTURE) to lock all
 current and future pages the varnish process allocates to ram.

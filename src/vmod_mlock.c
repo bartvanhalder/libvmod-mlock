@@ -13,5 +13,5 @@
 VCL_INT
 vmod_all(VRT_CTX)
 {
-        return(mlockall(MCL_CURRENT|MCL_FUTURE);
+        return(mlockall(MCL_CURRENT|MCL_FUTURE));
 }
