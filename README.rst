@@ -2,49 +2,26 @@
 vmod-mlock
 ============
 
-notice
-------
-
-For new developments, we recommend to consider using
-https://github.com/Dridi/vcdk
 
 SYNOPSIS
 ========
 
 import mlock;
 
+sub vcl_init {
+  mlock.all()
+}
+
 DESCRIPTION
 ===========
 
-Mlock Varnish vmod demonstrating how to write an out-of-tree Varnish vmod.
-
-Implements the traditional Hello World as a vmod.
-
-FUNCTIONS
-=========
-
-hello
------
-
-Prototype
-        ::
-
-                hello(STRING S)
-Return value
-	STRING
-Description
-	Returns "Hello, " prepended to S
-Mlock
-        ::
-
-                set resp.http.hello = mlock.hello("World");
+Mlock Varnish vmod to use the mlockall() syscall to prevent
+varnish from being swapped out.
 
 INSTALLATION
 ============
 
-The source tree is based on autotools to configure the building, and
-does also have the necessary bits in place to do functional unit tests
-using the ``varnishtest`` tool.
+The source tree is based on autotools to configure the building.
 
 Building requires the Varnish header files and uses pkg-config to find
 the necessary paths.
@@ -72,8 +49,6 @@ Make targets:
 
 * make - builds the vmod.
 * make install - installs your vmod.
-* make check - runs the unit tests in ``src/tests/*.vtc``.
-* make distcheck - run check and prepare a tarball of the vmod.
 
 If you build a dist tarball, you don't need any of the autotools or
 pkg-config. You can build the module simply by running::
@@ -95,36 +70,7 @@ In your VCL you could then use this vmod along the following lines::
 
         import mlock;
 
-        sub vcl_deliver {
+        sub vcl_init {
                 # This sets resp.http.hello to "Hello, World"
-                set resp.http.hello = mlock.hello("World");
+                mlock.all();
         }
-
-COMMON PROBLEMS
-===============
-
-* configure: error: Need varnish.m4 -- see README.rst
-
-  Check whether ``PKG_CONFIG_PATH`` and ``ACLOCAL_PATH`` were set correctly
-  before calling ``autogen.sh`` and ``configure``
-
-* Incompatibilities with different Varnish Cache versions
-
-  Make sure you build this vmod against its correspondent Varnish Cache version.
-  For instance, to build against Varnish Cache 4.1, this vmod must be built from
-  branch 4.1.
-
-START YOUR OWN VMOD
-===================
-
-The basic steps to start a new vmod from this mlock are::
-
-  name=myvmod
-  git clone libvmod-mlock libvmod-$name
-  cd libvmod-$name
-  ./rename-vmod-script $name
-
-and follow the instructions output by rename-vmod-script
-
-.. image:: https://circleci.com/gh/varnishcache/libvmod-mlock/tree/master.svg?style=svg
-    :target: https://app.circleci.com/pipelines/github/varnishcache/libvmod-mlock?branch=master
