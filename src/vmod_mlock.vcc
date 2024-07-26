@@ -9,22 +9,16 @@ $Module mlock 3 Mlock VMOD
 DESCRIPTION
 ===========
 
-This is the embedded documentation for the mlock VMOD. It should
-mention what the vmod is intended to do.
+Make sure the Varnish process is not swapped out.
 
-It can span multiple lines and is written in RST format.
-You can even have links and lists in here:
+Useful when combining an instance of varnish on the same machine as the
+backend. Varnish should always be fast while a backend process can be
+swapped out.
 
-* https://github.com/varnish/libvmod-mlock/
-* https://www.varnish-cache.org/
+$Function int all()
 
-$Event event_function
-$Function STRING info()
+This calls MLOCK(2): mlockall(MCL_CURRENT|MCL_FUTURE) to lock all
+current and future pages the varnish process allocates to ram.
 
-Returns a string set by the last VCL event, demonstrating the use of
-event functions.
-
-$Function STRING hello(STRING)
-
-The different functions provided by the VMOD should also have their own
-embedded documentation. This section is for the hello() function.
+The return value is the return value of mlockall, see `man 2 mlock`
+for details on your system.
